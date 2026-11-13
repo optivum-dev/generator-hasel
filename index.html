@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Generator Wi-Fi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 20px;
+        }
+
+        .box {
+            background-color: #ffffff;
+            width: 400px;
+            padding: 20px;
+            border: 1px solid #cccccc;
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        select, input, button {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #004c99;
+        }
+
+        .wyniki {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #cccccc;
+        }
+
+        .wynik-linia {
+            background-color: #f9f9f9;
+            border: 1px solid #dddddd;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Generator sieci Wi-Fi</h2>
+
+    <p>
+        <label for="typ">Nazwa sieci (wzorzec):</label>
+        <select id="typ">
+            <option value="tplink">TP-Link_[4 litery i cyfry]</option>
+            <option value="wifi">Wi-Fi-[4 cyfry]</option>
+            <option value="firma">Firmowa: Wi-Fi-[4 cyfry]_EXT</option>
+        </select>
+    </p>
+
+    <p>
+        <label for="dlugosc">Długość hasła:</label>
+        <input type="number" id="dlugosc" value="12" min="8" max="32">
+    </p>
+
+    <p>
+        <label for="pasmo">Pasmo:</label>
+        <select id="pasmo">
+            <option value="2.4 GHz">2.4 GHz</option>
+            <option value="5 GHz">5 GHz</option>
+            <option value="6 GHz">6 GHz</option>
+            <option value="2.4 GHz / 5 GHz">2.4 GHz / 5 GHz (Dual-Band)</option>
+        </select>
+    </p>
+
+    <p>
+        <label for="zabezpieczenie">Zabezpieczenie:</label>
+        <select id="zabezpieczenie">
+            <option value="WPA2-Personal">WPA2-Personal</option>
+            <option value="WPA3-Personal">WPA3-Personal</option>
+            <option value="WPA2/WPA3">WPA2/WPA3</option>
+        </select>
+    </p>
+
+    <button onclick="generuj()">Generuj</button>
+
+    <div class="wyniki">
+        <div class="wynik-linia"><b>Nazwa sieci:</b> <span id="w-nazwa">-</span></div>
+        <div class="wynik-linia"><b>Hasło:</b> <span id="w-haslo">-</span></div>
+        <div class="wynik-linia"><b>Pasmo:</b> <span id="w-pasmo">-</span></div>
+        <div class="wynik-linia"><b>Zabezpieczenie:</b> <span id="w-zab">-</span></div>
+    </div>
+</div>
+
+<script>
+    function losujCyfry(ile) {
+        var cyfry = "0123456789";
+        var wynik = "";
+        for (var i = 0; i < ile; i++) {
+            var los = Math.floor(Math.random() * cyfry.length);
+            wynik += cyfry[los];
+        }
+        return wynik;
+    }
+
+    function losujLiteryCyfry(ile) {
+        var znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var wynik = "";
+        for (var i = 0; i < ile; i++) {
+            var los = Math.floor(Math.random() * znaki.length);
+            wynik += znaki[los];
+        }
+        return wynik;
+    }
+
+    function generujHaslo(dlugosc) {
+        var znaki = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*";
+        var haslo = "";
+        for (var i = 0; i < dlugosc; i++) {
+            var los = Math.floor(Math.random() * znaki.length);
+            haslo += znaki[los];
+        }
+        return haslo;
+    }
+
+    function generuj() {
+        var typ = document.getElementById("typ").value;
+        var dlugosc = document.getElementById("dlugosc").value;
+        var pasmo = document.getElementById("pasmo").value;
+        var zabezpieczenie = document.getElementById("zabezpieczenie").value;
+
+        var nazwaSieci = "";
+
+        if (typ == "tplink") {
+            nazwaSieci = "TP-Link_" + losujLiteryCyfry(4);
+            if (pasmo === "5 GHz") {
+                nazwaSieci += "_5G";
+            } else if (pasmo === "6 GHz") {
+                nazwaSieci += "_6G";
+            }
+        } else if (typ == "wifi") {
+            nazwaSieci = "Wi-Fi-" + losujCyfry(4);
+        } else if (typ == "firma") {
+            nazwaSieci = "Wi-Fi-" + losujCyfry(4) + "_EXT";
+        }
+
+        document.getElementById("w-nazwa").innerHTML = nazwaSieci;
+        document.getElementById("w-haslo").innerHTML = generujHaslo(dlugosc);
+        document.getElementById("w-pasmo").innerHTML = pasmo;
+        document.getElementById("w-zab").innerHTML = zabezpieczenie;
+    }
+
+    // Wygeneruj od razu po otwarciu strony
+    generuj();
+</script>
+
+</body>
+</html>
