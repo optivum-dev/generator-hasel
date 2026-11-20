@@ -1,180 +1,945 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <title>Generator Wi-Fi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 20px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator haseł</title>
+  <!-- Load Tailwind CSS for responsive, modern styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Inter font for clean, legible typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-        .box {
-            background-color: #ffffff;
-            width: 400px;
-            padding: 20px;
-            border: 1px solid #cccccc;
-            margin: 0 auto;
-        }
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            emblem: {
+              blue: '#0A78F5',
+              blueDeep: '#0458C8',
+              magenta: '#C4166B',
+              crimson: '#9B0E4E',
+              tint: '#EFF6FF',
+              border: '#D5E5FC',
+            },
+          },
+          boxShadow: {
+            'emblem': '0 14px 30px -8px rgba(4, 88, 200, 0.35), 0 8px 20px -10px rgba(196, 22, 107, 0.35)',
+            'card': '0 22px 45px -18px rgba(15, 23, 42, 0.16)',
+          },
+        },
+      },
+    };
+  </script>
 
-        h2 {
-            text-align: center;
-            margin-top: 0;
-        }
+  <style>
+    /* Emblem gradient: vibrant electric blue transitioning on the right edge into deep magenta/crimson */
+    .emblem-gradient-bg {
+      background: linear-gradient(
+        90deg,
+        #0975F0 0%,
+        #0A78F5 68%,
+        #5D42B8 86%,
+        #A61258 95%,
+        #8F0C47 100%
+      );
+    }
 
-        p {
-            margin-bottom: 15px;
-        }
+    .emblem-gradient-bar {
+      background: linear-gradient(
+        90deg,
+        #0A78F5 0%,
+        #2B68E6 55%,
+        #8A288F 84%,
+        #C4166B 100%
+      );
+    }
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+    /* Custom range slider styling for cross-browser polish */
+    input[type="range"].emblem-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 10px;
+      border-radius: 9999px;
+      outline: none;
+      cursor: pointer;
+    }
 
-        select, input, button {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
+    input[type="range"].emblem-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 9999px;
+      background: #0A78F5;
+      border: 4px solid #ffffff;
+      box-shadow: 0 3px 10px rgba(10, 120, 245, 0.45);
+      cursor: pointer;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
 
-        button {
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+    input[type="range"].emblem-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+      background: #C4166B;
+    }
 
-        button:hover {
-            background-color: #004c99;
-        }
+    input[type="range"].emblem-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 9999px;
+      background: #0A78F5;
+      border: 4px solid #ffffff;
+      box-shadow: 0 3px 10px rgba(10, 120, 245, 0.45);
+      cursor: pointer;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
 
-        .wyniki {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #cccccc;
-        }
+    /* Subtle pulse on the white heart-in-circle emblem */
+    @keyframes gentleEmblemFloat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.035); }
+    }
 
-        .wynik-linia {
-            background-color: #f9f9f9;
-            border: 1px solid #dddddd;
-            padding: 8px;
-            margin-bottom: 8px;
-        }
-    </style>
+    .emblem-float {
+      animation: gentleEmblemFloat 4.2s ease-in-out infinite;
+    }
+  </style>
 </head>
-<body>
-
-<div class="box">
-    <h2>Generator sieci Wi-Fi</h2>
-
-    <p>
-        <label for="typ">Nazwa sieci (wzorzec):</label>
-        <select id="typ">
-            <option value="tplink">TP-Link_[4 litery i cyfry]</option>
-            <option value="wifi">Wi-Fi-[4 cyfry]</option>
-            <option value="firma">Firmowa: Wi-Fi-[4 cyfry]_EXT</option>
-        </select>
-    </p>
-
-    <p>
-        <label for="dlugosc">Długość hasła:</label>
-        <input type="number" id="dlugosc" value="12" min="8" max="32">
-    </p>
-
-    <p>
-        <label for="pasmo">Pasmo:</label>
-        <select id="pasmo">
-            <option value="2.4 GHz">2.4 GHz</option>
-            <option value="5 GHz">5 GHz</option>
-            <option value="6 GHz">6 GHz</option>
-            <option value="2.4 GHz / 5 GHz">2.4 GHz / 5 GHz (Dual-Band)</option>
-        </select>
-    </p>
-
-    <p>
-        <label for="zabezpieczenie">Zabezpieczenie:</label>
-        <select id="zabezpieczenie">
-            <option value="WPA2-Personal">WPA2-Personal</option>
-            <option value="WPA3-Personal">WPA3-Personal</option>
-            <option value="WPA2/WPA3">WPA2/WPA3</option>
-        </select>
-    </p>
-
-    <button onclick="generuj()">Generuj</button>
-
-    <div class="wyniki">
-        <div class="wynik-linia"><b>Nazwa sieci:</b> <span id="w-nazwa">-</span></div>
-        <div class="wynik-linia"><b>Hasło:</b> <span id="w-haslo">-</span></div>
-        <div class="wynik-linia"><b>Pasmo:</b> <span id="w-pasmo">-</span></div>
-        <div class="wynik-linia"><b>Zabezpieczenie:</b> <span id="w-zab">-</span></div>
-    </div>
-</div>
-
-<script>
-    function losujCyfry(ile) {
-        var cyfry = "0123456789";
-        var wynik = "";
-        for (var i = 0; i < ile; i++) {
-            var los = Math.floor(Math.random() * cyfry.length);
-            wynik += cyfry[los];
-        }
-        return wynik;
+<body class="min-h-screen emblem-gradient-bg text-slate-800 antialiased selection:bg-emblem-magenta selection:text-white relative overflow-x-hidden">
+  <!-- Main page container -->
+  <div class="min-h-screen flex flex-col justify-between py-6 px-4 sm:py-10 sm:px-6 lg:px-8 relative z-10">
+    <main class="w-full max-w-2xl mx-auto">
+      <!-- Emblem Header with Crisp White Heart-in-Circle Line Art -->
+      <header class="text-center mb-7">
+        <div class="inline-flex flex-col items-center">
+          <div class="emblem-float w-20 h-20 sm:w-24 sm:h-24 rounded-2xl emblem-gradient-bg shadow-emblem border-2 border-white/80 flex items-center justify-center p-2 select-none" aria-hidden="true">
+            <!-- Crisp pure white geometric line art: white ring/circle surrounding a clean white heart outline -->
+            <svg viewBox="0 0 120 120" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="60" cy="60" r="46" stroke="#FFFFFF" stroke-width="7.5" />
+              <path
+                d="M60 85.5C58.8 85.5 57.6 85.05 56.65 84.2C43.1 72.1 34 63.75 34 52.85C34 45.15 40.05 39.2 47.75 39.2C52.5 39.2 57.05 41.45 60 45.1C62.95 41.45 67.5 39.2 72.25 39.2C79.95 39.2 86 45.15 86 52.85C86 63.75 76.9 72.1 63.35 84.2C62.4 85.05 61.2 85.5 60 85.5Z"
+    input[type="range"].emblem-slider::-moz-range-thumb:hover {
+      transform: scale(1.1);
+      background: #C4166B;
     }
+  </style>
+</head>
+<body class="min-h-screen emblem-gradient-bg text-slate-800 antialiased selection:bg-emblem-magenta selection:text-white relative overflow-x-hidden">
+  <!-- Main page container -->
+  <div class="min-h-screen flex flex-col justify-between py-6 px-4 sm:py-10 sm:px-6 lg:px-8 relative z-10">
+    <main class="w-full max-w-2xl mx-auto">
+      <!-- Header -->
+      <header class="text-center mb-7">
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-sm">
+          🔐 Generator haseł
+        </h1>
+        <p class="mt-2 text-sm sm:text-base text-white/90 max-w-xl mx-auto">
+          Twórz losowe i silne hasła bezpośrednio w przeglądarce zgodnie z własnymi kryteriami. Żadne hasło nie opuszcza Twojego urządzenia.
+        </p>
+      </header>
 
-    function losujLiteryCyfry(ile) {
-        var znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        var wynik = "";
-        for (var i = 0; i < ile; i++) {
-            var los = Math.floor(Math.random() * znaki.length);
-            wynik += znaki[los];
+      <!-- Main Generator Card -->
+      <section aria-label="Ustawienia i wynik generatora haseł" class="bg-white/95 backdrop-blur-md rounded-3xl shadow-card border border-white/70 overflow-hidden">
+        <!-- Top Blue-to-Magenta Accent Bar -->
+        <div class="h-2.5 w-full emblem-gradient-bar"></div>
+
+        <div class="p-5 sm:p-8 space-y-7">
+          <!-- Generated Password Display Box -->
+          <div class="bg-emblem-tint/85 border-2 border-emblem-border rounded-2xl p-4 sm:p-5 transition-colors">
+            <div class="flex items-center justify-between gap-2 mb-2.5">
+              <span class="text-xs font-bold uppercase tracking-wider text-emblem-blueDeep">
+                Wygenerowane hasło
+              </span>
+              <span id="charCounterBadge" class="text-xs font-semibold text-slate-700 bg-white px-2.5 py-0.5 rounded-full border border-emblem-border">
+                0 znaków
+              </span>
+            </div>
+
+            <!-- Password output & primary actions -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div class="flex-1 bg-white border border-emblem-border rounded-xl px-4 py-3.5 flex items-center justify-between gap-2 min-h-[56px] shadow-inner">
+                <input
+                  id="passwordOutput"
+                  type="text"
+                  readonly
+                  aria-label="Wygenerowane hasło"
+                  value=""
+                  class="w-full font-mono text-lg sm:text-xl font-bold text-slate-900 bg-transparent focus:outline-none tracking-wide select-all"
+                />
+                <button
+                  id="toggleVisibilityBtn"
+                  type="button"
+                  title="Ukryj lub pokaż hasło"
+                  aria-label="Ukryj lub pokaż hasło"
+                  class="p-2 rounded-lg text-slate-500 hover:text-emblem-blue hover:bg-emblem-tint transition-colors shrink-0"
+                >
+                  <!-- Eye icon -->
+                  <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <!-- Eye-off icon (hidden initially) -->
+                  <svg id="eyeOffIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2.5 shrink-0">
+                <button
+                  id="regenerateBtn"
+                  type="button"
+                  title="Generuj nowe hasło"
+                  aria-label="Generuj nowe hasło"
+                  class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl font-bold text-sm text-emblem-blueDeep bg-white hover:bg-emblem-tint border-2 border-emblem-blue/30 hover:border-emblem-blue transition-all active:scale-95"
+                >
+                  <svg id="refreshIcon" class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span>Nowe</span>
+                </button>
+
+                <button
+                  id="copyBtn"
+                  type="button"
+                  class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-white emblem-gradient-bar hover:opacity-95 shadow-md hover:shadow-lg transition-all active:scale-95"
+                >
+                  <svg id="copyIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <svg id="checkIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span id="copyBtnText">Kopiuj</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Copy / Status Feedback Banner -->
+            <div id="feedbackBanner" role="status" aria-live="polite" class="mt-3 hidden text-xs sm:text-sm font-medium rounded-xl px-3.5 py-2 flex items-center gap-2">
+              <span id="feedbackText"></span>
+            </div>
+
+            <!-- Password Strength Meter -->
+            <div class="mt-4 pt-3.5 border-t border-emblem-border/90">
+              <div class="flex items-center justify-between text-xs sm:text-sm mb-2">
+                <span class="font-semibold text-slate-600">Siła hasła:</span>
+                <span id="strengthLabel" class="font-extrabold text-emblem-blueDeep">Bardzo silne</span>
+              </div>
+              <div class="grid grid-cols-4 gap-2 h-2.5" aria-hidden="true">
+                <div id="seg1" class="rounded-full bg-slate-200 transition-all duration-300"></div>
+                <div id="seg2" class="rounded-full bg-slate-200 transition-all duration-300"></div>
+                <div id="seg3" class="rounded-full bg-slate-200 transition-all duration-300"></div>
+                <div id="seg4" class="rounded-full bg-slate-200 transition-all duration-300"></div>
+              </div>
+              <p id="strengthHint" class="mt-2 text-xs text-slate-500">
+                Długie hasło łączące różne typy znaków zapewnia wysoką odporność na zgadywanie.
+              </p>
+            </div>
+          </div>
+
+          <!-- Length Controls & Quick Presets -->
+          <div class="space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <label for="lengthRange" class="text-base font-bold text-slate-900">
+                Długość hasła
+              </label>
+
+              <div class="flex items-center gap-2">
+                <input
+                  id="lengthInput"
+                  type="number"
+                  min="6"
+                  max="64"
+                  value="16"
+                  aria-label="Długość hasła w znakach"
+                  class="w-20 text-center font-bold text-base text-emblem-blueDeep bg-emblem-tint border-2 border-emblem-border focus:border-emblem-blue rounded-xl py-1.5 px-2 focus:outline-none transition-colors"
+                />
+                <span class="text-sm font-medium text-slate-500">znaków (6–64)</span>
+              </div>
+            </div>
+
+            <input
+              id="lengthRange"
+              type="range"
+              min="6"
+              max="64"
+              value="16"
+              aria-label="Suwak długości hasła"
+              class="w-full emblem-slider"
+            />
+
+            <!-- Quick preset buttons -->
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="text-xs font-semibold text-slate-500 mr-1">Szybkie długości:</span>
+              <button type="button" data-length="8" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+                8 znaków
+              </button>
+              <button type="button" data-length="12" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+                12 znaków
+              </button>
+              <button type="button" data-length="16" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+                16 znaków
+              </button>
+              <button type="button" data-length="24" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+                24 znaki
+              </button>
+              <button type="button" data-length="32" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+                32 znaki
+              </button>
+            </div>
+          </div>
+
+          <!-- Character Sets Section -->
+          <div class="space-y-3">
+            <h2 class="text-base font-bold text-slate-900">
+              Zestaw znaków
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Lowercase -->
+              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-blue/60 bg-slate-50/70 cursor-pointer transition-all select-none">
+                <div class="pr-3">
+                  <span class="block text-sm font-bold text-slate-900">Małe litery</span>
+                  <span class="block text-xs font-mono text-slate-500 mt-0.5">a – z</span>
+                </div>
+                <input id="optLower" type="checkbox" checked class="sr-only peer" />
+                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-blue/40 rounded-full peer peer-checked:bg-emblem-blue relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+              </label>
+
+              <!-- Uppercase -->
+              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-blue/60 bg-slate-50/70 cursor-pointer transition-all select-none">
+                <div class="pr-3">
+                  <span class="block text-sm font-bold text-slate-900">Wielkie litery</span>
+                  <span class="block text-xs font-mono text-slate-500 mt-0.5">A – Z</span>
+                </div>
+                <input id="optUpper" type="checkbox" checked class="sr-only peer" />
+                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-blue/40 rounded-full peer peer-checked:bg-emblem-blue relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+              </label>
+
+              <!-- Numbers -->
+              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-blue/60 bg-slate-50/70 cursor-pointer transition-all select-none">
+                <div class="pr-3">
+                  <span class="block text-sm font-bold text-slate-900">Cyfry</span>
+                  <span class="block text-xs font-mono text-slate-500 mt-0.5">0 – 9</span>
+                </div>
+                <input id="optNumbers" type="checkbox" checked class="sr-only peer" />
+                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-blue/40 rounded-full peer peer-checked:bg-emblem-blue relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+              </label>
+
+              <!-- Special Characters -->
+              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-magenta/60 bg-slate-50/70 cursor-pointer transition-all select-none">
+                <div class="pr-3">
+                  <span class="block text-sm font-bold text-slate-900">Znaki specjalne</span>
+                  <span class="block text-xs font-mono text-slate-500 mt-0.5">! @ # $ % ^ &amp; * ?</span>
+                </div>
+                <input id="optSymbols" type="checkbox" checked class="sr-only peer" />
+                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-magenta/40 rounded-full peer peer-checked:bg-emblem-magenta relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Optional Filters Section -->
+          <div class="space-y-3">
+            <h2 class="text-base font-bold text-slate-900">
+              Opcjonalne filtry
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Exclude Ambiguous Characters -->
+              <label class="flex items-start justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-blue/60 bg-white cursor-pointer transition-all select-none">
+                <div class="pr-3">
+                  <span class="block text-sm font-bold text-slate-900">Wyklucz podobne znaki</span>
+                  <span class="block text-xs text-slate-500 mt-0.5">
+                    Pomija m.in. <code class="font-mono text-slate-700">0</code>, <code class="font-mono text-slate-700">O</code>, <code class="font-mono text-slate-700">o</code>, <code class="font-mono text-slate-700">1</code>, <code class="font-mono text-slate-700">l</code>, <code class="font-mono text-slate-700">I</code>
+                  </span>
+                </div>
+                <input id="optExcludeSimilar" type="checkbox" class="sr-only peer" />
+                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-blue/40 rounded-full peer peer-checked:bg-emblem-blue relative transition-colors shrink-0 mt-0.5 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+              </label>
+
+              <!-- Exclude Repeats -->
+              <label class="flex items-start justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-magenta/60 bg-white cursor-pointer transition-all select-none">
+                <div class="pr-3">
+                  <span class="block text-sm font-bold text-slate-900">Wyklucz powtórzenia</span>
+                  <span class="block text-xs text-slate-500 mt-0.5">
+                    Każdy znak w haśle pojawia się maksymalnie raz
+                  </span>
+                </div>
+                <input id="optExcludeRepeats" type="checkbox" class="sr-only peer" />
+                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-magenta/40 rounded-full peer peer-checked:bg-emblem-magenta relative transition-colors shrink-0 mt-0.5 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-xs text-white/85 space-y-1">
+      <p>
+        Generowanie kryptograficzne lokalnie w przeglądarce (<code class="font-mono text-white font-semibold">window.crypto.getRandomValues</code>).
+      </p>
+      <p>
+        Lokalny generator haseł działający w pełni po stronie klienta.
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    /**
+     * Client-side password generator application in Polish.
+     * Uses cryptographically secure randomness via window.crypto.getRandomValues.
+     */
+    (function () {
+      'use strict';
+
+      // Character sets definition
+      const CHAR_SETS = {
+        lower: 'abcdefghijklmnopqrstuvwxyz',
+        upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        numbers: '0123456789',
+        symbols: '!@#$%^&*()-_=+[]{};:,.<>?',
+      };
+
+      // Ambiguous characters to exclude when "Wyklucz podobne znaki" is active
+      const AMBIGUOUS_CHARS = new Set(['0', 'O', 'o', '1', 'l', 'I', '|']);
+
+      // Length boundaries
+      const MIN_LENGTH = 6;
+      const MAX_LENGTH = 64;
+
+      // DOM element references
+      const dom = {
+        passwordOutput: document.getElementById('passwordOutput'),
+        charCounterBadge: document.getElementById('charCounterBadge'),
+        toggleVisibilityBtn: document.getElementById('toggleVisibilityBtn'),
+        eyeIcon: document.getElementById('eyeIcon'),
+        eyeOffIcon: document.getElementById('eyeOffIcon'),
+        regenerateBtn: document.getElementById('regenerateBtn'),
+        refreshIcon: document.getElementById('refreshIcon'),
+        copyBtn: document.getElementById('copyBtn'),
+        copyIcon: document.getElementById('copyIcon'),
+        checkIcon: document.getElementById('checkIcon'),
+        copyBtnText: document.getElementById('copyBtnText'),
+        feedbackBanner: document.getElementById('feedbackBanner'),
+        feedbackText: document.getElementById('feedbackText'),
+        strengthLabel: document.getElementById('strengthLabel'),
+        strengthHint: document.getElementById('strengthHint'),
+        segments: [
+          document.getElementById('seg1'),
+          document.getElementById('seg2'),
+          document.getElementById('seg3'),
+          document.getElementById('seg4'),
+        ],
+        lengthRange: document.getElementById('lengthRange'),
+        lengthInput: document.getElementById('lengthInput'),
+        presetButtons: Array.from(document.querySelectorAll('.preset-btn')),
+        optLower: document.getElementById('optLower'),
+        optUpper: document.getElementById('optUpper'),
+        optNumbers: document.getElementById('optNumbers'),
+        optSymbols: document.getElementById('optSymbols'),
+        optExcludeSimilar: document.getElementById('optExcludeSimilar'),
+        optExcludeRepeats: document.getElementById('optExcludeRepeats'),
+      };
+
+      // Application state
+      const state = {
+        length: 16,
+        isMasked: false,
+        actualPassword: '',
+        feedbackTimeout: null,
+        copyTimeout: null,
+      };
+
+      /**
+       * Returns a cryptographically secure random integer in [0, maxExclusive).
+       * Uses rejection sampling to eliminate modulo bias.
+       * @param {number} maxExclusive
+       * @returns {number}
+       */
+      function secureRandomInt(maxExclusive) {
+        if (!Number.isInteger(maxExclusive) || maxExclusive <= 0) {
+          throw new Error('maxExclusive must be a positive integer.');
         }
-        return wynik;
-    }
-
-    function generujHaslo(dlugosc) {
-        var znaki = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*";
-        var haslo = "";
-        for (var i = 0; i < dlugosc; i++) {
-            var los = Math.floor(Math.random() * znaki.length);
-            haslo += znaki[los];
+        if (!window.crypto || typeof window.crypto.getRandomValues !== 'function') {
+          throw new Error('Brak obsługi bezpiecznego generatora kryptograficznego w przeglądarce.');
         }
-        return haslo;
-    }
 
-    function generuj() {
-        var typ = document.getElementById("typ").value;
-        var dlugosc = document.getElementById("dlugosc").value;
-        var pasmo = document.getElementById("pasmo").value;
-        var zabezpieczenie = document.getElementById("zabezpieczenie").value;
+        const maxUint32 = 0xffffffff;
+        const limit = maxUint32 - (maxUint32 % maxExclusive);
+        const randomBuffer = new Uint32Array(1);
 
-        var nazwaSieci = "";
+        let value = 0;
+        do {
+          window.crypto.getRandomValues(randomBuffer);
+          value = randomBuffer[0];
+        } while (value >= limit);
 
-        if (typ == "tplink") {
-            nazwaSieci = "TP-Link_" + losujLiteryCyfry(4);
-            if (pasmo === "5 GHz") {
-                nazwaSieci += "_5G";
-            } else if (pasmo === "6 GHz") {
-                nazwaSieci += "_6G";
+        return value % maxExclusive;
+      }
+
+      /**
+       * Shuffles an array in place using the Fisher-Yates algorithm and CSPRNG.
+       * @param {string[]} array
+       * @returns {string[]}
+       */
+      function secureShuffle(array) {
+        for (let i = array.length - 1; i > 0; i -= 1) {
+          const j = secureRandomInt(i + 1);
+          const temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
+        }
+        return array;
+      }
+
+      /**
+       * Filters a string of characters by removing ambiguous characters if needed.
+       * @param {string} chars
+       * @param {boolean} excludeSimilar
+       * @returns {string[]}
+       */
+      function preparePool(chars, excludeSimilar) {
+        const list = Array.from(chars);
+        if (!excludeSimilar) {
+          return list;
+        }
+        return list.filter((ch) => !AMBIGUOUS_CHARS.has(ch));
+      }
+
+      /**
+       * Displays a styled status message inside the feedback banner.
+       * @param {string} message
+       * @param {'info'|'warning'|'error'|'success'} type
+       * @param {number} durationMs
+       */
+      function showFeedback(message, type = 'info', durationMs = 4000) {
+        if (state.feedbackTimeout) {
+          clearTimeout(state.feedbackTimeout);
+          state.feedbackTimeout = null;
+        }
+
+        const styles = {
+          info: 'bg-emblem-tint text-emblem-blueDeep border border-emblem-border',
+          success: 'bg-blue-100 text-blue-950 border border-blue-300',
+          warning: 'bg-amber-50 text-amber-900 border border-amber-300',
+          error: 'bg-rose-50 text-rose-900 border border-rose-300',
+        };
+
+        dom.feedbackBanner.className = `mt-3 text-xs sm:text-sm font-medium rounded-xl px-3.5 py-2 flex items-center gap-2 ${styles[type] || styles.info}`;
+        dom.feedbackText.textContent = message;
+        dom.feedbackBanner.classList.remove('hidden');
+
+        if (durationMs > 0) {
+          state.feedbackTimeout = setTimeout(() => {
+            dom.feedbackBanner.classList.add('hidden');
+          }, durationMs);
+        }
+      }
+
+      /**
+       * Hides the status feedback banner.
+       */
+      function hideFeedback() {
+        if (state.feedbackTimeout) {
+          clearTimeout(state.feedbackTimeout);
+          state.feedbackTimeout = null;
+        }
+        dom.feedbackBanner.classList.add('hidden');
+      }
+
+      /**
+       * Updates the visual fill track of the range slider and active preset button states.
+       */
+      function syncLengthUI() {
+        dom.lengthRange.value = String(state.length);
+        dom.lengthInput.value = String(state.length);
+
+        const percent = ((state.length - MIN_LENGTH) / (MAX_LENGTH - MIN_LENGTH)) * 100;
+        dom.lengthRange.style.background = `linear-gradient(to right, #0A78F5 0%, #7334A4 ${percent * 0.75}, #C4166B ${percent}%, #E2E8F0 ${percent}%, #E2E8F0 100%)`;
+
+        dom.presetButtons.forEach((btn) => {
+          const presetVal = Number(btn.getAttribute('data-length'));
+          const isActive = presetVal === state.length;
+          if (isActive) {
+            btn.className = 'preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all emblem-gradient-bar text-white border-transparent shadow-sm';
+          } else {
+            btn.className = 'preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all bg-white text-slate-700 border-slate-200 hover:border-emblem-blue hover:text-emblem-blueDeep';
+          }
+        });
+      }
+
+      /**
+       * Updates the password display input (plain text or masked) and character counter badge.
+       */
+      function renderPasswordOutput() {
+        if (!state.actualPassword) {
+          dom.passwordOutput.value = '';
+          dom.charCounterBadge.textContent = '0 znaków';
+          return;
+        }
+
+        dom.passwordOutput.value = state.isMasked
+          ? '•'.repeat(state.actualPassword.length)
+          : state.actualPassword;
+
+        const len = state.actualPassword.length;
+        const noun = len === 1 ? 'znak' : (len % 10 >= 2 && len % 10 <= 4 && (len % 100 < 10 || len % 100 >= 20)) ? 'znaki' : 'znaków';
+        dom.charCounterBadge.textContent = `${len} ${noun}`;
+      }
+
+      /**
+       * Evaluates and renders password strength based on length, character variety, and unique pool size.
+       * @param {string} password
+       * @param {number} poolSize
+       */
+      function updateStrengthMeter(password, poolSize) {
+        // Reset segments
+        dom.segments.forEach((seg) => {
+          seg.className = 'rounded-full bg-slate-200 transition-all duration-300';
+        });
+
+        if (!password || poolSize <= 1) {
+          dom.strengthLabel.textContent = 'Brak / bardzo słabe';
+          dom.strengthLabel.className = 'font-extrabold text-red-600';
+          dom.strengthHint.textContent = 'Wybierz co najmniej jeden zestaw znaków, aby wygenerować hasło.';
+          return;
+        }
+
+        // Approximate entropy in bits: length * log2(poolSize)
+        const entropy = password.length * Math.log2(poolSize);
+
+        let score = 1; // 1 = Słabe, 2 = Średnie, 3 = Silne, 4 = Bardzo silne
+        if (entropy >= 90 && password.length >= 14) {
+          score = 4;
+        } else if (entropy >= 65 && password.length >= 10) {
+          score = 3;
+        } else if (entropy >= 40) {
+          score = 2;
+        }
+
+        const configs = {
+          1: {
+            label: 'Słabe',
+            labelClass: 'font-extrabold text-rose-600',
+            barClass: 'bg-rose-500',
+            hint: 'Warto zwiększyć długość hasła lub dodać więcej typów znaków.',
+          },
+          2: {
+            label: 'Średnie',
+            labelClass: 'font-extrabold text-amber-600',
+            barClass: 'bg-amber-400',
+            hint: 'Dobre na mniej wrażliwe konta — dla ważnych kont zalecamy co najmniej 14–16 znaków.',
+          },
+          3: {
+            label: 'Silne',
+            labelClass: 'font-extrabold text-emblem-blue',
+            barClass: 'bg-emblem-blue',
+            hint: 'Solidny poziom ochrony przed atakami słownikowymi i siłowym zgadywaniem.',
+          },
+          4: {
+            label: 'Bardzo silne',
+            labelClass: 'font-extrabold text-emblem-magenta',
+            barClass: 'emblem-gradient-bar',
+            hint: 'Wysoka entropia i świetna odporność na próby złamania.',
+          },
+        };
+
+        const cfg = configs[score];
+        dom.strengthLabel.textContent = cfg.label;
+        dom.strengthLabel.className = cfg.labelClass;
+        dom.strengthHint.textContent = cfg.hint;
+
+        for (let i = 0; i < score; i += 1) {
+          dom.segments[i].className = `rounded-full ${cfg.barClass} transition-all duration-300`;
+        }
+      }
+
+      /**
+       * Generates a new password according to active options and updates the UI.
+       * Gracefully handles empty character sets or length limits when excluding repeats.
+       */
+      function generatePassword() {
+        try {
+          const excludeSimilar = dom.optExcludeSimilar.checked;
+          const excludeRepeats = dom.optExcludeRepeats.checked;
+
+          const activePools = [];
+          if (dom.optLower.checked) {
+            const pool = preparePool(CHAR_SETS.lower, excludeSimilar);
+            if (pool.length > 0) activePools.push(pool);
+          }
+          if (dom.optUpper.checked) {
+            const pool = preparePool(CHAR_SETS.upper, excludeSimilar);
+            if (pool.length > 0) activePools.push(pool);
+          }
+          if (dom.optNumbers.checked) {
+            const pool = preparePool(CHAR_SETS.numbers, excludeSimilar);
+            if (pool.length > 0) activePools.push(pool);
+          }
+          if (dom.optSymbols.checked) {
+            const pool = preparePool(CHAR_SETS.symbols, excludeSimilar);
+            if (pool.length > 0) activePools.push(pool);
+          }
+
+          // Guard: No usable characters left
+          const combinedUniqueChars = Array.from(new Set(activePools.flat()));
+          if (combinedUniqueChars.length === 0) {
+            state.actualPassword = '';
+            renderPasswordOutput();
+            updateStrengthMeter('', 0);
+            showFeedback(
+              'Brak dostępnych znaków do użycia. Włącz inny zestaw lub wyłącz wykluczanie podobnych znaków.',
+              'error',
+              0
+            );
+            return;
+          }
+
+          let targetLength = state.length;
+          let noticeMessage = null;
+
+          // Guard: If excluding repeats, target length cannot exceed unique available characters
+          if (excludeRepeats && targetLength > combinedUniqueChars.length) {
+            const maxPossible = combinedUniqueChars.length;
+            noticeMessage = `Przy aktywnym wykluczaniu powtórzeń dostępnych jest maksymalnie ${maxPossible} unikalnych znaków — wygenerowano hasło o długości ${maxPossible}.`;
+            targetLength = maxPossible;
+          }
+
+          const resultChars = [];
+
+          if (excludeRepeats) {
+            // Ensure at least one character from each active set when possible within targetLength
+            const usedChars = new Set();
+
+            for (let i = 0; i < activePools.length && resultChars.length < targetLength; i += 1) {
+              const candidates = activePools[i].filter((ch) => !usedChars.has(ch));
+              if (candidates.length > 0) {
+                const picked = candidates[secureRandomInt(candidates.length)];
+                resultChars.push(picked);
+                usedChars.add(picked);
+              }
             }
-        } else if (typ == "wifi") {
-            nazwaSieci = "Wi-Fi-" + losujCyfry(4);
-        } else if (typ == "firma") {
-            nazwaSieci = "Wi-Fi-" + losujCyfry(4) + "_EXT";
+
+            // Fill remaining slots from remaining unique characters
+            const remainingPool = combinedUniqueChars.filter((ch) => !usedChars.has(ch));
+            secureShuffle(remainingPool);
+            while (resultChars.length < targetLength && remainingPool.length > 0) {
+              resultChars.push(remainingPool.pop());
+            }
+
+            secureShuffle(resultChars);
+          } else {
+            // Guarantee at least one character from each selected character set if length allows
+            for (let i = 0; i < activePools.length && resultChars.length < targetLength; i += 1) {
+              const pool = activePools[i];
+              const picked = pool[secureRandomInt(pool.length)];
+              resultChars.push(picked);
+            }
+
+            // Fill remaining positions from the full combined character pool
+            const fullPool = activePools.flat();
+            while (resultChars.length < targetLength) {
+              const picked = fullPool[secureRandomInt(fullPool.length)];
+              resultChars.push(picked);
+            }
+
+            secureShuffle(resultChars);
+          }
+
+          state.actualPassword = resultChars.join('');
+          renderPasswordOutput();
+          updateStrengthMeter(state.actualPassword, combinedUniqueChars.length);
+
+          if (noticeMessage) {
+            showFeedback(noticeMessage, 'warning', 5000);
+          } else {
+            hideFeedback();
+          }
+        } catch (err) {
+          state.actualPassword = '';
+          renderPasswordOutput();
+          updateStrengthMeter('', 0);
+          showFeedback(
+            err && err.message ? err.message : 'Wystąpił błąd podczas generowania hasła.',
+            'error',
+            5000
+          );
+        }
+      }
+
+      /**
+       * Copies the generated password to the user's clipboard with visual feedback.
+       */
+      function copyPasswordToClipboard() {
+        if (!state.actualPassword) {
+          showFeedback('Najpierw wygeneruj hasło, aby je skopiować.', 'warning', 3000);
+          return;
         }
 
-        document.getElementById("w-nazwa").innerHTML = nazwaSieci;
-        document.getElementById("w-haslo").innerHTML = generujHaslo(dlugosc);
-        document.getElementById("w-pasmo").innerHTML = pasmo;
-        document.getElementById("w-zab").innerHTML = zabezpieczenie;
-    }
+        const textToCopy = state.actualPassword;
 
-    // Wygeneruj od razu po otwarciu strony
-    generuj();
-</script>
+        const onCopiedSuccess = () => {
+          if (state.copyTimeout) {
+            clearTimeout(state.copyTimeout);
+          }
+          dom.copyIcon.classList.add('hidden');
+          dom.checkIcon.classList.remove('hidden');
+          dom.copyBtnText.textContent = 'Skopiowano!';
+          dom.copyBtn.classList.remove('emblem-gradient-bar');
+          dom.copyBtn.classList.add('bg-emblem-magenta');
 
+          showFeedback('Hasło zostało skopiowane do schowka.', 'success', 2500);
+
+          state.copyTimeout = setTimeout(() => {
+            dom.checkIcon.classList.add('hidden');
+            dom.copyIcon.classList.remove('hidden');
+            dom.copyBtnText.textContent = 'Kopiuj';
+            dom.copyBtn.classList.remove('bg-emblem-magenta');
+            dom.copyBtn.classList.add('emblem-gradient-bar');
+          }, 1800);
+        };
+
+        // Try modern Clipboard API first, fallback to execCommand for sandboxed/iframe contexts
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          navigator.clipboard.writeText(textToCopy).then(onCopiedSuccess).catch(() => {
+            fallbackExecCommandCopy(textToCopy, onCopiedSuccess);
+          });
+        } else {
+          fallbackExecCommandCopy(textToCopy, onCopiedSuccess);
+        }
+      }
+
+      /**
+       * Fallback clipboard copy using a temporary textarea and document.execCommand('copy').
+       * @param {string} text
+       * @param {Function} onSuccess
+       */
+      function fallbackExecCommandCopy(text, onSuccess) {
+        try {
+          const tempTextarea = document.createElement('textarea');
+          tempTextarea.value = text;
+          tempTextarea.setAttribute('readonly', '');
+          tempTextarea.style.position = 'fixed';
+          tempTextarea.style.left = '-9999px';
+          document.body.appendChild(tempTextarea);
+          tempTextarea.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(tempTextarea);
+
+          if (ok) {
+            onSuccess();
+          } else {
+            showFeedback('Nie udało się automatycznie skopiować. Zaznacz hasło i użyj Ctrl+C / Cmd+C.', 'warning', 4500);
+          }
+        } catch (e) {
+          showFeedback('Nie udało się skopiować do schowka.', 'error', 4000);
+        }
+      }
+
+      /**
+       * Updates password length from user input and regenerates password.
+       * @param {number} rawValue
+       */
+      function setLength(rawValue) {
+        const parsed = Number.parseInt(rawValue, 10);
+        if (Number.isNaN(parsed)) {
+          return;
+        }
+        const clamped = Math.min(MAX_LENGTH, Math.max(MIN_LENGTH, parsed));
+        state.length = clamped;
+        syncLengthUI();
+        generatePassword();
+      }
+
+      /**
+       * Toggles password masking between plain characters and bullet dots.
+       */
+      function toggleMasking() {
+        state.isMasked = !state.isMasked;
+        if (state.isMasked) {
+          dom.eyeIcon.classList.add('hidden');
+          dom.eyeOffIcon.classList.remove('hidden');
+        } else {
+          dom.eyeOffIcon.classList.add('hidden');
+          dom.eyeIcon.classList.remove('hidden');
+        }
+        renderPasswordOutput();
+      }
+
+      /**
+       * Attaches all event listeners cleanly.
+       */
+      function bindEvents() {
+        dom.lengthRange.addEventListener('input', (e) => {
+          setLength(e.target.value);
+        });
+
+        dom.lengthInput.addEventListener('input', (e) => {
+          const val = Number.parseInt(e.target.value, 10);
+          if (!Number.isNaN(val) && val >= MIN_LENGTH && val <= MAX_LENGTH) {
+            state.length = val;
+            syncLengthUI();
+            generatePassword();
+          }
+        });
+
+        dom.lengthInput.addEventListener('blur', (e) => {
+          setLength(e.target.value);
+        });
+
+        dom.presetButtons.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const presetLength = Number(btn.getAttribute('data-length'));
+            setLength(presetLength);
+          });
+        });
+
+        const optionCheckboxes = [
+          dom.optLower,
+          dom.optUpper,
+          dom.optNumbers,
+          dom.optSymbols,
+          dom.optExcludeSimilar,
+          dom.optExcludeRepeats,
+        ];
+
+        optionCheckboxes.forEach((checkbox) => {
+          checkbox.addEventListener('change', () => {
+            generatePassword();
+          });
+        });
+
+        dom.regenerateBtn.addEventListener('click', () => {
+          dom.refreshIcon.classList.add('rotate-180');
+          setTimeout(() => {
+            dom.refreshIcon.classList.remove('rotate-180');
+          }, 320);
+          generatePassword();
+        });
+
+        dom.copyBtn.addEventListener('click', () => {
+          copyPasswordToClipboard();
+        });
+
+        dom.toggleVisibilityBtn.addEventListener('click', () => {
+          toggleMasking();
+        });
+      }
+
+      // Initialize application on DOM load
+      document.addEventListener('DOMContentLoaded', () => {
+        bindEvents();
+        syncLengthUI();
+        generatePassword();
+      });
+    })();
+  </script>
 </body>
 </html>
