@@ -9,7 +9,7 @@
   <!-- Load Inter font for clean, legible typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet" />
 
   <script>
     tailwind.config = {
@@ -17,20 +17,22 @@
         extend: {
           fontFamily: {
             sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
           },
           colors: {
-            emblem: {
-              blue: '#0A78F5',
-              blueDeep: '#0458C8',
-              magenta: '#C4166B',
-              crimson: '#9B0E4E',
-              tint: '#EFF6FF',
-              border: '#D5E5FC',
+            pepco: {
+              blue: '#0078E3',
+              blueDark: '#005BB0',
+              purple: '#6B2FB3',
+              magenta: '#C81E78',
+              magentaDark: '#9E145C',
+              surface: '#F4F8FD',
+              border: '#D6E6F8',
             },
           },
           boxShadow: {
-            'emblem': '0 14px 30px -8px rgba(4, 88, 200, 0.35), 0 8px 20px -10px rgba(196, 22, 107, 0.35)',
             'card': '0 22px 45px -18px rgba(15, 23, 42, 0.16)',
+            'cta': '0 10px 24px -8px rgba(0, 120, 227, 0.42), 0 8px 18px -10px rgba(200, 30, 120, 0.35)',
           },
         },
       },
@@ -38,30 +40,31 @@
   </script>
 
   <style>
-    /* Emblem gradient: vibrant electric blue transitioning on the right edge into deep magenta/crimson */
-    .emblem-gradient-bg {
+    /* Pepco science-blue (#0078E3) to vivid magenta/purple gradient backdrop */
+    .pepco-gradient-bg {
       background: linear-gradient(
-        90deg,
-        #0975F0 0%,
-        #0A78F5 68%,
-        #5D42B8 86%,
-        #A61258 95%,
-        #8F0C47 100%
+        105deg,
+        #0078E3 0%,
+        #006FD6 66%,
+        #5437B6 86%,
+        #A81D7B 95%,
+        #C81E78 100%
       );
     }
 
-    .emblem-gradient-bar {
+    /* Pepco accent gradient for primary actions, progress bar, and slider fill */
+    .pepco-gradient-accent {
       background: linear-gradient(
         90deg,
-        #0A78F5 0%,
-        #2B68E6 55%,
-        #8A288F 84%,
-        #C4166B 100%
+        #0078E3 0%,
+        #2B5EC7 55%,
+        #8A279A 85%,
+        #C81E78 100%
       );
     }
 
     /* Custom range slider styling for cross-browser polish */
-    input[type="range"].emblem-slider {
+    input[type="range"].pepco-slider {
       -webkit-appearance: none;
       appearance: none;
       height: 10px;
@@ -70,66 +73,42 @@
       cursor: pointer;
     }
 
-    input[type="range"].emblem-slider::-webkit-slider-thumb {
+    input[type="range"].pepco-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
       width: 24px;
       height: 24px;
       border-radius: 9999px;
-      background: #0A78F5;
+      background: #0078E3;
       border: 4px solid #ffffff;
-      box-shadow: 0 3px 10px rgba(10, 120, 245, 0.45);
+      box-shadow: 0 3px 10px rgba(0, 120, 227, 0.42);
       cursor: pointer;
       transition: transform 0.15s ease, background-color 0.15s ease;
     }
 
-    input[type="range"].emblem-slider::-webkit-slider-thumb:hover {
+    input[type="range"].pepco-slider::-webkit-slider-thumb:hover {
       transform: scale(1.1);
-      background: #C4166B;
+      background: #C81E78;
     }
 
-    input[type="range"].emblem-slider::-moz-range-thumb {
+    input[type="range"].pepco-slider::-moz-range-thumb {
       width: 24px;
       height: 24px;
       border-radius: 9999px;
-      background: #0A78F5;
+      background: #0078E3;
       border: 4px solid #ffffff;
-      box-shadow: 0 3px 10px rgba(10, 120, 245, 0.45);
+      box-shadow: 0 3px 10px rgba(0, 120, 227, 0.42);
       cursor: pointer;
       transition: transform 0.15s ease, background-color 0.15s ease;
     }
 
-    /* Subtle pulse on the white heart-in-circle emblem */
-    @keyframes gentleEmblemFloat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.035); }
-    }
-
-    .emblem-float {
-      animation: gentleEmblemFloat 4.2s ease-in-out infinite;
-    }
-  </style>
-</head>
-<body class="min-h-screen emblem-gradient-bg text-slate-800 antialiased selection:bg-emblem-magenta selection:text-white relative overflow-x-hidden">
-  <!-- Main page container -->
-  <div class="min-h-screen flex flex-col justify-between py-6 px-4 sm:py-10 sm:px-6 lg:px-8 relative z-10">
-    <main class="w-full max-w-2xl mx-auto">
-      <!-- Emblem Header with Crisp White Heart-in-Circle Line Art -->
-      <header class="text-center mb-7">
-        <div class="inline-flex flex-col items-center">
-          <div class="emblem-float w-20 h-20 sm:w-24 sm:h-24 rounded-2xl emblem-gradient-bg shadow-emblem border-2 border-white/80 flex items-center justify-center p-2 select-none" aria-hidden="true">
-            <!-- Crisp pure white geometric line art: white ring/circle surrounding a clean white heart outline -->
-            <svg viewBox="0 0 120 120" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="60" cy="60" r="46" stroke="#FFFFFF" stroke-width="7.5" />
-              <path
-                d="M60 85.5C58.8 85.5 57.6 85.05 56.65 84.2C43.1 72.1 34 63.75 34 52.85C34 45.15 40.05 39.2 47.75 39.2C52.5 39.2 57.05 41.45 60 45.1C62.95 41.45 67.5 39.2 72.25 39.2C79.95 39.2 86 45.15 86 52.85C86 63.75 76.9 72.1 63.35 84.2C62.4 85.05 61.2 85.5 60 85.5Z"
-    input[type="range"].emblem-slider::-moz-range-thumb:hover {
+    input[type="range"].pepco-slider::-moz-range-thumb:hover {
       transform: scale(1.1);
-      background: #C4166B;
+      background: #C81E78;
     }
   </style>
 </head>
-<body class="min-h-screen emblem-gradient-bg text-slate-800 antialiased selection:bg-emblem-magenta selection:text-white relative overflow-x-hidden">
+<body class="min-h-screen pepco-gradient-bg text-slate-900 antialiased selection:bg-pepco-magenta selection:text-white relative overflow-x-hidden">
   <!-- Main page container -->
   <div class="min-h-screen flex flex-col justify-between py-6 px-4 sm:py-10 sm:px-6 lg:px-8 relative z-10">
     <main class="w-full max-w-2xl mx-auto">
@@ -138,31 +117,31 @@
         <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-sm">
           🔐 Generator haseł
         </h1>
-        <p class="mt-2 text-sm sm:text-base text-white/90 max-w-xl mx-auto">
+        <p class="mt-2 text-sm sm:text-base text-white/95 max-w-xl mx-auto">
           Twórz losowe i silne hasła bezpośrednio w przeglądarce zgodnie z własnymi kryteriami. Żadne hasło nie opuszcza Twojego urządzenia.
         </p>
       </header>
 
       <!-- Main Generator Card -->
-      <section aria-label="Ustawienia i wynik generatora haseł" class="bg-white/95 backdrop-blur-md rounded-3xl shadow-card border border-white/70 overflow-hidden">
-        <!-- Top Blue-to-Magenta Accent Bar -->
-        <div class="h-2.5 w-full emblem-gradient-bar"></div>
+      <section aria-label="Ustawienia i wynik generatora haseł" class="bg-white/95 backdrop-blur-md rounded-3xl shadow-card border border-white/80 overflow-hidden">
+        <!-- Top Pepco Accent Bar -->
+        <div class="h-2.5 w-full pepco-gradient-accent"></div>
 
         <div class="p-5 sm:p-8 space-y-7">
           <!-- Generated Password Display Box -->
-          <div class="bg-emblem-tint/85 border-2 border-emblem-border rounded-2xl p-4 sm:p-5 transition-colors">
+          <div class="bg-pepco-surface border-2 border-pepco-border rounded-2xl p-4 sm:p-5 transition-colors">
             <div class="flex items-center justify-between gap-2 mb-2.5">
-              <span class="text-xs font-bold uppercase tracking-wider text-emblem-blueDeep">
+              <span class="text-xs font-bold uppercase tracking-wider text-pepco-blueDark">
                 Wygenerowane hasło
               </span>
-              <span id="charCounterBadge" class="text-xs font-semibold text-slate-700 bg-white px-2.5 py-0.5 rounded-full border border-emblem-border">
+              <span id="charCounterBadge" class="text-xs font-semibold text-slate-800 bg-white px-2.5 py-0.5 rounded-full border border-pepco-border">
                 0 znaków
               </span>
             </div>
 
             <!-- Password output & primary actions -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <div class="flex-1 bg-white border border-emblem-border rounded-xl px-4 py-3.5 flex items-center justify-between gap-2 min-h-[56px] shadow-inner">
+              <div class="flex-1 bg-white border border-pepco-border rounded-xl px-4 py-3.5 flex items-center justify-between gap-2 min-h-[56px] shadow-inner focus-within:border-pepco-blue focus-within:ring-2 focus-within:ring-pepco-blue/25 transition-all">
                 <input
                   id="passwordOutput"
                   type="text"
@@ -176,7 +155,7 @@
                   type="button"
                   title="Ukryj lub pokaż hasło"
                   aria-label="Ukryj lub pokaż hasło"
-                  class="p-2 rounded-lg text-slate-500 hover:text-emblem-blue hover:bg-emblem-tint transition-colors shrink-0"
+                  class="p-2 rounded-lg text-slate-600 hover:text-pepco-blue hover:bg-pepco-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue active:scale-95 transition-all shrink-0"
                 >
                   <!-- Eye icon -->
                   <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -196,7 +175,7 @@
                   type="button"
                   title="Generuj nowe hasło"
                   aria-label="Generuj nowe hasło"
-                  class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl font-bold text-sm text-emblem-blueDeep bg-white hover:bg-emblem-tint border-2 border-emblem-blue/30 hover:border-emblem-blue transition-all active:scale-95"
+                  class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl font-bold text-sm text-pepco-blueDark bg-white hover:bg-pepco-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue border-2 border-pepco-blue/35 hover:border-pepco-blue transition-all active:scale-95"
                 >
                   <svg id="refreshIcon" class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -207,7 +186,7 @@
                 <button
                   id="copyBtn"
                   type="button"
-                  class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-white emblem-gradient-bar hover:opacity-95 shadow-md hover:shadow-lg transition-all active:scale-95"
+                  class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-white pepco-gradient-accent hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-pepco-blue shadow-cta transition-all active:scale-95"
                 >
                   <svg id="copyIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -226,10 +205,10 @@
             </div>
 
             <!-- Password Strength Meter -->
-            <div class="mt-4 pt-3.5 border-t border-emblem-border/90">
+            <div class="mt-4 pt-3.5 border-t border-pepco-border">
               <div class="flex items-center justify-between text-xs sm:text-sm mb-2">
-                <span class="font-semibold text-slate-600">Siła hasła:</span>
-                <span id="strengthLabel" class="font-extrabold text-emblem-blueDeep">Bardzo silne</span>
+                <span class="font-semibold text-slate-700">Siła hasła:</span>
+                <span id="strengthLabel" class="font-extrabold text-pepco-blueDark">Bardzo silne</span>
               </div>
               <div class="grid grid-cols-4 gap-2 h-2.5" aria-hidden="true">
                 <div id="seg1" class="rounded-full bg-slate-200 transition-all duration-300"></div>
@@ -237,20 +216,29 @@
                 <div id="seg3" class="rounded-full bg-slate-200 transition-all duration-300"></div>
                 <div id="seg4" class="rounded-full bg-slate-200 transition-all duration-300"></div>
               </div>
-              <p id="strengthHint" class="mt-2 text-xs text-slate-500">
+              <p id="strengthHint" class="mt-2 text-xs text-slate-600">
                 Długie hasło łączące różne typy znaków zapewnia wysoką odporność na zgadywanie.
               </p>
             </div>
           </div>
 
           <!-- Length Controls & Quick Presets -->
-          <div class="space-y-3">
+          <div class="space-y-3.5">
             <div class="flex flex-wrap items-center justify-between gap-3">
               <label for="lengthRange" class="text-base font-bold text-slate-900">
                 Długość hasła
               </label>
 
               <div class="flex items-center gap-2">
+                <button
+                  id="decrementLengthBtn"
+                  type="button"
+                  title="Zmniejsz długość hasła"
+                  aria-label="Zmniejsz długość hasła"
+                  class="w-9 h-9 inline-flex items-center justify-center rounded-xl font-extrabold text-lg text-pepco-blueDark bg-pepco-surface hover:bg-pepco-border border border-pepco-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue active:scale-95 transition-all"
+                >
+                  −
+                </button>
                 <input
                   id="lengthInput"
                   type="number"
@@ -258,9 +246,18 @@
                   max="64"
                   value="16"
                   aria-label="Długość hasła w znakach"
-                  class="w-20 text-center font-bold text-base text-emblem-blueDeep bg-emblem-tint border-2 border-emblem-border focus:border-emblem-blue rounded-xl py-1.5 px-2 focus:outline-none transition-colors"
+                  class="w-16 text-center font-bold text-base text-slate-900 bg-white border-2 border-pepco-border focus:border-pepco-blue focus:outline-none focus:ring-2 focus:ring-pepco-blue/25 rounded-xl py-1.5 px-1.5 transition-all"
                 />
-                <span class="text-sm font-medium text-slate-500">znaków (6–64)</span>
+                <button
+                  id="incrementLengthBtn"
+                  type="button"
+                  title="Zwiększ długość hasła"
+                  aria-label="Zwiększ długość hasła"
+                  class="w-9 h-9 inline-flex items-center justify-center rounded-xl font-extrabold text-lg text-pepco-blueDark bg-pepco-surface hover:bg-pepco-border border border-pepco-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue active:scale-95 transition-all"
+                >
+                  +
+                </button>
+                <span class="text-sm font-medium text-slate-600 ml-1">znaków (6–64)</span>
               </div>
             </div>
 
@@ -271,25 +268,25 @@
               max="64"
               value="16"
               aria-label="Suwak długości hasła"
-              class="w-full emblem-slider"
+              class="w-full pepco-slider"
             />
 
             <!-- Quick preset buttons -->
             <div class="flex flex-wrap items-center gap-2 pt-1">
-              <span class="text-xs font-semibold text-slate-500 mr-1">Szybkie długości:</span>
-              <button type="button" data-length="8" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+              <span class="text-xs font-semibold text-slate-600 mr-1">Szybkie długości:</span>
+              <button type="button" data-length="8" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue">
                 8 znaków
               </button>
-              <button type="button" data-length="12" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+              <button type="button" data-length="12" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue">
                 12 znaków
               </button>
-              <button type="button" data-length="16" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+              <button type="button" data-length="16" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue">
                 16 znaków
               </button>
-              <button type="button" data-length="24" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+              <button type="button" data-length="24" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue">
                 24 znaki
               </button>
-              <button type="button" data-length="32" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all">
+              <button type="button" data-length="32" class="preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue">
                 32 znaki
               </button>
             </div>
@@ -303,43 +300,43 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- Lowercase -->
-              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-blue/60 bg-slate-50/70 cursor-pointer transition-all select-none">
+              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-pepco-blue/60 bg-pepco-surface/60 cursor-pointer transition-all select-none">
                 <div class="pr-3">
                   <span class="block text-sm font-bold text-slate-900">Małe litery</span>
-                  <span class="block text-xs font-mono text-slate-500 mt-0.5">a – z</span>
+                  <span class="block text-xs font-mono text-slate-600 mt-0.5">a – z</span>
                 </div>
                 <input id="optLower" type="checkbox" checked class="sr-only peer" />
-                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-blue/40 rounded-full peer peer-checked:bg-emblem-blue relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+                <div class="w-12 h-7 bg-slate-300 peer-focus-visible:ring-2 peer-focus-visible:ring-pepco-blue/50 rounded-full peer peer-checked:bg-pepco-blue relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
               </label>
 
               <!-- Uppercase -->
-              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-blue/60 bg-slate-50/70 cursor-pointer transition-all select-none">
+              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-pepco-blue/60 bg-pepco-surface/60 cursor-pointer transition-all select-none">
                 <div class="pr-3">
                   <span class="block text-sm font-bold text-slate-900">Wielkie litery</span>
-                  <span class="block text-xs font-mono text-slate-500 mt-0.5">A – Z</span>
+                  <span class="block text-xs font-mono text-slate-600 mt-0.5">A – Z</span>
                 </div>
                 <input id="optUpper" type="checkbox" checked class="sr-only peer" />
-                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-blue/40 rounded-full peer peer-checked:bg-emblem-blue relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+                <div class="w-12 h-7 bg-slate-300 peer-focus-visible:ring-2 peer-focus-visible:ring-pepco-blue/50 rounded-full peer peer-checked:bg-pepco-blue relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
               </label>
 
               <!-- Numbers -->
-              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-blue/60 bg-slate-50/70 cursor-pointer transition-all select-none">
+              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-pepco-blue/60 bg-pepco-surface/60 cursor-pointer transition-all select-none">
                 <div class="pr-3">
                   <span class="block text-sm font-bold text-slate-900">Cyfry</span>
-                  <span class="block text-xs font-mono text-slate-500 mt-0.5">0 – 9</span>
+                  <span class="block text-xs font-mono text-slate-600 mt-0.5">0 – 9</span>
                 </div>
                 <input id="optNumbers" type="checkbox" checked class="sr-only peer" />
-                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-blue/40 rounded-full peer peer-checked:bg-emblem-blue relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+                <div class="w-12 h-7 bg-slate-300 peer-focus-visible:ring-2 peer-focus-visible:ring-pepco-blue/50 rounded-full peer peer-checked:bg-pepco-blue relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
               </label>
 
               <!-- Special Characters -->
-              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-magenta/60 bg-slate-50/70 cursor-pointer transition-all select-none">
+              <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-pepco-magenta/60 bg-pepco-surface/60 cursor-pointer transition-all select-none">
                 <div class="pr-3">
                   <span class="block text-sm font-bold text-slate-900">Znaki specjalne</span>
-                  <span class="block text-xs font-mono text-slate-500 mt-0.5">! @ # $ % ^ &amp; * ?</span>
+                  <span class="block text-xs font-mono text-slate-600 mt-0.5">! @ # $ % ^ &amp; * ?</span>
                 </div>
                 <input id="optSymbols" type="checkbox" checked class="sr-only peer" />
-                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-magenta/40 rounded-full peer peer-checked:bg-emblem-magenta relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+                <div class="w-12 h-7 bg-slate-300 peer-focus-visible:ring-2 peer-focus-visible:ring-pepco-magenta/50 rounded-full peer peer-checked:bg-pepco-magenta relative transition-colors shrink-0 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
               </label>
             </div>
           </div>
@@ -352,27 +349,27 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- Exclude Ambiguous Characters -->
-              <label class="flex items-start justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-blue/60 bg-white cursor-pointer transition-all select-none">
+              <label class="flex items-start justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-pepco-blue/60 bg-white cursor-pointer transition-all select-none">
                 <div class="pr-3">
                   <span class="block text-sm font-bold text-slate-900">Wyklucz podobne znaki</span>
-                  <span class="block text-xs text-slate-500 mt-0.5">
-                    Pomija m.in. <code class="font-mono text-slate-700">0</code>, <code class="font-mono text-slate-700">O</code>, <code class="font-mono text-slate-700">o</code>, <code class="font-mono text-slate-700">1</code>, <code class="font-mono text-slate-700">l</code>, <code class="font-mono text-slate-700">I</code>
+                  <span class="block text-xs text-slate-600 mt-0.5">
+                    Pomija m.in. <code class="font-mono text-slate-800">0</code>, <code class="font-mono text-slate-800">O</code>, <code class="font-mono text-slate-800">o</code>, <code class="font-mono text-slate-800">1</code>, <code class="font-mono text-slate-800">l</code>, <code class="font-mono text-slate-800">I</code>
                   </span>
                 </div>
                 <input id="optExcludeSimilar" type="checkbox" class="sr-only peer" />
-                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-blue/40 rounded-full peer peer-checked:bg-emblem-blue relative transition-colors shrink-0 mt-0.5 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+                <div class="w-12 h-7 bg-slate-300 peer-focus-visible:ring-2 peer-focus-visible:ring-pepco-blue/50 rounded-full peer peer-checked:bg-pepco-blue relative transition-colors shrink-0 mt-0.5 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
               </label>
 
               <!-- Exclude Repeats -->
-              <label class="flex items-start justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-emblem-magenta/60 bg-white cursor-pointer transition-all select-none">
+              <label class="flex items-start justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-pepco-magenta/60 bg-white cursor-pointer transition-all select-none">
                 <div class="pr-3">
-                  <span class="block text-sm font-bold text-slate-900">Wyklucz powtórzenia</span>
-                  <span class="block text-xs text-slate-500 mt-0.5">
+                  <span class="block text-sm font-bold text-slate-900">Bez powtórzeń</span>
+                  <span class="block text-xs text-slate-600 mt-0.5">
                     Każdy znak w haśle pojawia się maksymalnie raz
                   </span>
                 </div>
                 <input id="optExcludeRepeats" type="checkbox" class="sr-only peer" />
-                <div class="w-12 h-7 bg-slate-300 peer-focus:ring-2 peer-focus:ring-emblem-magenta/40 rounded-full peer peer-checked:bg-emblem-magenta relative transition-colors shrink-0 mt-0.5 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
+                <div class="w-12 h-7 bg-slate-300 peer-focus-visible:ring-2 peer-focus-visible:ring-pepco-magenta/50 rounded-full peer peer-checked:bg-pepco-magenta relative transition-colors shrink-0 mt-0.5 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-5"></div>
               </label>
             </div>
           </div>
@@ -381,7 +378,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="mt-8 text-center text-xs text-white/85 space-y-1">
+    <footer class="mt-8 text-center text-xs text-white/90 space-y-1">
       <p>
         Generowanie kryptograficzne lokalnie w przeglądarce (<code class="font-mono text-white font-semibold">window.crypto.getRandomValues</code>).
       </p>
@@ -437,6 +434,8 @@
           document.getElementById('seg3'),
           document.getElementById('seg4'),
         ],
+        decrementLengthBtn: document.getElementById('decrementLengthBtn'),
+        incrementLengthBtn: document.getElementById('incrementLengthBtn'),
         lengthRange: document.getElementById('lengthRange'),
         lengthInput: document.getElementById('lengthInput'),
         presetButtons: Array.from(document.querySelectorAll('.preset-btn')),
@@ -526,10 +525,10 @@
         }
 
         const styles = {
-          info: 'bg-emblem-tint text-emblem-blueDeep border border-emblem-border',
-          success: 'bg-blue-100 text-blue-950 border border-blue-300',
-          warning: 'bg-amber-50 text-amber-900 border border-amber-300',
-          error: 'bg-rose-50 text-rose-900 border border-rose-300',
+          info: 'bg-pepco-surface text-pepco-blueDark border border-pepco-border',
+          success: 'bg-sky-100 text-slate-950 border border-sky-300',
+          warning: 'bg-amber-50 text-amber-950 border border-amber-300',
+          error: 'bg-rose-50 text-rose-950 border border-rose-300',
         };
 
         dom.feedbackBanner.className = `mt-3 text-xs sm:text-sm font-medium rounded-xl px-3.5 py-2 flex items-center gap-2 ${styles[type] || styles.info}`;
@@ -555,22 +554,31 @@
       }
 
       /**
-       * Updates the visual fill track of the range slider and active preset button states.
+       * Updates the visual fill track of the range slider, step buttons, and active preset button states.
        */
       function syncLengthUI() {
         dom.lengthRange.value = String(state.length);
         dom.lengthInput.value = String(state.length);
 
+        const atMin = state.length <= MIN_LENGTH;
+        const atMax = state.length >= MAX_LENGTH;
+        dom.decrementLengthBtn.disabled = atMin;
+        dom.incrementLengthBtn.disabled = atMax;
+        dom.decrementLengthBtn.classList.toggle('opacity-45', atMin);
+        dom.decrementLengthBtn.classList.toggle('cursor-not-allowed', atMin);
+        dom.incrementLengthBtn.classList.toggle('opacity-45', atMax);
+        dom.incrementLengthBtn.classList.toggle('cursor-not-allowed', atMax);
+
         const percent = ((state.length - MIN_LENGTH) / (MAX_LENGTH - MIN_LENGTH)) * 100;
-        dom.lengthRange.style.background = `linear-gradient(to right, #0A78F5 0%, #7334A4 ${percent * 0.75}, #C4166B ${percent}%, #E2E8F0 ${percent}%, #E2E8F0 100%)`;
+        dom.lengthRange.style.background = `linear-gradient(to right, #0078E3 0%, #6B2FB3 ${percent * 0.72}, #C81E78 ${percent}%, #E2E8F0 ${percent}%, #E2E8F0 100%)`;
 
         dom.presetButtons.forEach((btn) => {
           const presetVal = Number(btn.getAttribute('data-length'));
           const isActive = presetVal === state.length;
           if (isActive) {
-            btn.className = 'preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all emblem-gradient-bar text-white border-transparent shadow-sm';
+            btn.className = 'preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue pepco-gradient-accent text-white border-transparent shadow-sm';
           } else {
-            btn.className = 'preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all bg-white text-slate-700 border-slate-200 hover:border-emblem-blue hover:text-emblem-blueDeep';
+            btn.className = 'preset-btn px-3 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pepco-blue bg-white text-slate-800 border-slate-200 hover:border-pepco-blue hover:text-pepco-blueDark';
           }
         });
       }
@@ -581,9 +589,16 @@
       function renderPasswordOutput() {
         if (!state.actualPassword) {
           dom.passwordOutput.value = '';
+          dom.passwordOutput.placeholder = 'Brak dostępnych znaków';
+          dom.toggleVisibilityBtn.disabled = true;
+          dom.copyBtn.disabled = true;
           dom.charCounterBadge.textContent = '0 znaków';
           return;
         }
+
+        dom.passwordOutput.placeholder = '';
+        dom.toggleVisibilityBtn.disabled = false;
+        dom.copyBtn.disabled = false;
 
         dom.passwordOutput.value = state.isMasked
           ? '•'.repeat(state.actualPassword.length)
@@ -607,7 +622,7 @@
 
         if (!password || poolSize <= 1) {
           dom.strengthLabel.textContent = 'Brak / bardzo słabe';
-          dom.strengthLabel.className = 'font-extrabold text-red-600';
+          dom.strengthLabel.className = 'font-bold text-rose-600';
           dom.strengthHint.textContent = 'Wybierz co najmniej jeden zestaw znaków, aby wygenerować hasło.';
           return;
         }
@@ -627,26 +642,26 @@
         const configs = {
           1: {
             label: 'Słabe',
-            labelClass: 'font-extrabold text-rose-600',
+            labelClass: 'font-extrabold text-rose-700',
             barClass: 'bg-rose-500',
             hint: 'Warto zwiększyć długość hasła lub dodać więcej typów znaków.',
           },
           2: {
             label: 'Średnie',
-            labelClass: 'font-extrabold text-amber-600',
+            labelClass: 'font-extrabold text-amber-700',
             barClass: 'bg-amber-400',
             hint: 'Dobre na mniej wrażliwe konta — dla ważnych kont zalecamy co najmniej 14–16 znaków.',
           },
           3: {
             label: 'Silne',
-            labelClass: 'font-extrabold text-emblem-blue',
-            barClass: 'bg-emblem-blue',
+            labelClass: 'font-extrabold text-pepco-blue',
+            barClass: 'bg-pepco-blue',
             hint: 'Solidny poziom ochrony przed atakami słownikowymi i siłowym zgadywaniem.',
           },
           4: {
             label: 'Bardzo silne',
-            labelClass: 'font-extrabold text-emblem-magenta',
-            barClass: 'emblem-gradient-bar',
+            labelClass: 'font-extrabold text-pepco-magenta',
+            barClass: 'pepco-gradient-accent',
             hint: 'Wysoka entropia i świetna odporność na próby złamania.',
           },
         };
@@ -792,8 +807,8 @@
           dom.copyIcon.classList.add('hidden');
           dom.checkIcon.classList.remove('hidden');
           dom.copyBtnText.textContent = 'Skopiowano!';
-          dom.copyBtn.classList.remove('emblem-gradient-bar');
-          dom.copyBtn.classList.add('bg-emblem-magenta');
+          dom.copyBtn.classList.remove('pepco-gradient-accent');
+          dom.copyBtn.classList.add('bg-pepco-magenta');
 
           showFeedback('Hasło zostało skopiowane do schowka.', 'success', 2500);
 
@@ -801,8 +816,8 @@
             dom.checkIcon.classList.add('hidden');
             dom.copyIcon.classList.remove('hidden');
             dom.copyBtnText.textContent = 'Kopiuj';
-            dom.copyBtn.classList.remove('bg-emblem-magenta');
-            dom.copyBtn.classList.add('emblem-gradient-bar');
+            dom.copyBtn.classList.remove('bg-pepco-magenta');
+            dom.copyBtn.classList.add('pepco-gradient-accent');
           }, 1800);
         };
 
@@ -877,6 +892,14 @@
        * Attaches all event listeners cleanly.
        */
       function bindEvents() {
+        dom.decrementLengthBtn.addEventListener('click', () => {
+          setLength(state.length - 1);
+        });
+
+        dom.incrementLengthBtn.addEventListener('click', () => {
+          setLength(state.length + 1);
+        });
+
         dom.lengthRange.addEventListener('input', (e) => {
           setLength(e.target.value);
         });
