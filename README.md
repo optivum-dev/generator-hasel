@@ -1,1 +1,1 @@
-# generator-wifi
+# Generator haseł
